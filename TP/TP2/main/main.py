@@ -18,11 +18,6 @@ image_clown = open_image(path_clown,"L")
 image_noisy_Lena = open_image(path_noisy_lena, "RGB")
 image_Lena = open_image(path_lena)
 
-poivre_sel_Lena = poivre_sel(image_Lena, 0.1)
-median_noisy_lena = median(poivre_sel_Lena, 8)
+filtered_clown(image_clown)
 
-plt.imshow(median_noisy_lena)
-plt.show()
-#poivre_sel_Lena = poivre_sel(image_Lena, 0.1)
-#median_noisy_lena = median(poivre_sel_Lena, 8)
 
