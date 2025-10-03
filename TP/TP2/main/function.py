@@ -105,3 +105,39 @@ def filtered_clown(image_clown):
     plt.axis("off")
 
     plt.show()
+
+
+
+def filtered_noise(image_noice):
+    noise_fft = np.fft.fft2(image_noice)
+    noise_fft_shift = np.fft.fftshift(noise_fft)
+    noise_fft_shift[124:129, :65] = 0
+    noise_fft_shift[124:129, 185:] = 0
+    noise_shift2 = np.fft.fftshift(noise_fft_shift)
+    noise_recon = np.fft.ifft2(noise_shift2)
+
+    plt.figure(figsize=(12,6))
+
+    plt.subplot(1,3,3)
+    plt.imshow(np.real(noise_recon), cmap="gray")
+    plt.axis("off")
+
+    plt.subplot(1,3,2)
+    plt.imshow(np.log(np.abs(noise_fft_shift)), cmap="gray")
+    plt.axis("off")
+
+
+    plt.subplot(1,3,1)
+    plt.imshow(image_noice, cmap="gray")
+    plt.axis("off")
+
+    plt.show()
+    
+def print_fft(image):
+    fft = np.fft.fft2(image)
+    fft_shift = np.fft.fftshift(fft)
+    plt.subplot(1,2,1)
+    plt.imshow(image, cmap='gray')
+    plt.subplot(1,2,2)
+    plt.imshow(np.log(np.abs(fft_shift)), cmap='gray')
+    plt.show()
