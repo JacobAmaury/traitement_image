@@ -24,7 +24,11 @@ image_noise = open_image(path_noise, "L")
 #filtered_noise(image_noise)
 
 Lena_de_noise = median(image_noisy_Lena, 4)
+Lena_de_noise_equa = equa_histo(Lena_de_noise)
+plt.subplot(1,2,1)
 plt.imshow(Lena_de_noise)
+plt.subplot(1,2,2)
+plt.imshow(Lena_de_noise_equa)
 plt.show()
 
 

@@ -141,3 +141,9 @@ def print_fft(image):
     plt.subplot(1,2,2)
     plt.imshow(np.log(np.abs(fft_shift)), cmap='gray')
     plt.show()
+    
+def equa_histo(image):
+    histo = np.histogram(image, 255)
+    histo_cumul = histo.cumsum()
+    LUT = ((histo_cumul-np.min(histo_cumul))/(255-np.min(histo_cumul)))*(255)
+    return LUT[image]
