@@ -45,7 +45,7 @@ def median(image, window_size):
     height, width, channels = image.shape
     to_border = int(window_size/2)
 
-    im_convo = np.zeros_like(image)
+    im_med = np.zeros_like(image)
 
     for c in range(channels):
         for y in range(to_border, height - to_border): #evite les effets de bord
@@ -53,9 +53,9 @@ def median(image, window_size):
                 #on récupere la fentre autour du point(x,y)
                 median = np.median(image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1, c])
 
-                im_convo[y, x, c] = median
+                im_med[y, x, c] = median
 
-    return im_convo
+    return im_med
 
 
 
@@ -79,7 +79,7 @@ def fft_im(image):
     return np.fft.fft2(image)
 
 def filtered_clown(image_clown):
-    clown_fft = np.fft.fft2(image_clown)
+    clown_fft = np.fft.fft2(image_clown) 
     clown_fft_shift = np.fft.fftshift(clown_fft)
     clown_fft_shift[75:95, 10:30] = 0
     clown_fft_shift[30:50, 96:116] = 0
@@ -142,8 +142,40 @@ def print_fft(image):
     plt.imshow(np.log(np.abs(fft_shift)), cmap='gray')
     plt.show()
     
+
+    
+    
+def normalisation_histo(image):
+    I_max = np.max(image)
+    I_min = np.min(image)
+    return (((image-I_min)/(I_max-I_min))*255).astype(int)
+
+
+def histo_cumu(image):
+    histo, bin = np.histogram(image, 256)
+    histo_cumu = np.zeros_like(histo)
+    for i in range(histo.shape[0]):
+        histo_cumu[i] = np.sum(histo[:i+1])
+
+    return histo_cumu
+    
+
 def equa_histo(image):
-    histo = np.histogram(image, 255)
-    histo_cumul = histo.cumsum()
-    LUT = ((histo_cumul-np.min(histo_cumul))/(255-np.min(histo_cumul)))*(255)
+    histo_cumu = histo_cumu
+    histo_cumu_normalized = histo_cumu * 255 / histo_cumu[-1]
+    LUT = histo_cumu_normalized.astype(np.uint8)
+
     return LUT[image]
+
+
+def equlisation_exact(image):
+    
+    im_ligne = image.reshape(-1) #met l'image en vecteur ligne
+    
+    im_ligne_sorted = np.argsort(im_ligne) 
+    
+    uniform_value = np.linspace(0,255,im_ligne_sorted.shape[0])
+    im_ligne[im_ligne_sorted] = uniform_value
+    equalized_image = im_ligne.reshape(image.shape).astype(int)
+    return equalized_image
+    

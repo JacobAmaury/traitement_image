@@ -23,10 +23,13 @@ image_noise = open_image(path_noise, "L")
 #filtered_clown(image_clown)
 #filtered_noise(image_noise)
 
+
 Lena_de_noise = median(image_noisy_Lena, 4)
-Lena_de_noise_equa = equa_histo(Lena_de_noise)
+Lena_de_noise_equa = equlisation_exact(Lena_de_noise)
+histo_Lena,bin_lena = np.histogram(Lena_de_noise_equa, 255)
+
 plt.subplot(1,2,1)
-plt.imshow(Lena_de_noise)
+plt.bar(bin_lena[:-1],histo_Lena)
 plt.subplot(1,2,2)
 plt.imshow(Lena_de_noise_equa)
 plt.show()
