@@ -8,6 +8,7 @@ import numpy as np
 from PIL import Image
 import matplotlib.pyplot as plt
 import random as rd
+from skimage.transform import resize
 
 def open_image(path, mode="RGB"):
     img = np.array(Image.open(path).convert(mode), int)
@@ -143,7 +144,27 @@ def print_fft(image):
     plt.show()
     
 
+def crop_image(image_to_crop, dimensions):
+    x, y, _ = image_to_crop.shape 
+    center_x = x // 2
+    center_y = y // 2
     
+    crop_image = image_to_crop[
+        center_x - dimensions[0]//2 : center_x + dimensions[0]//2,
+        center_y-1 - dimensions[1]//2 : center_y + dimensions[1]//2]
+    return crop_image 
+    
+    
+
+#Ne fait pas exactement la bonne. Elle devrait changer la résolution de l'image pour l'adpter au drapeau
+#Mais elle recadre 
+def picture_flag(image, flag):
+    image_crop = crop_image(image, flag.shape)
+    image_flag = (image_crop + flag) / 2
+    image_flag = np.clip(image_flag, 0, 255)
+    
+    return image_flag.astype(int)
+
     
 def normalisation_histo(image):
     I_max = np.max(image)

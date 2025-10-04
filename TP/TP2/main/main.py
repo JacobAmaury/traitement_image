@@ -14,7 +14,12 @@ path_noisy_lena = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP
 path_lena = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Lena.jpg"
 path_clown = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/clown.tif"
 path_noise = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/noise.tif"
+path_flag = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/France.png"
+path_mark = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Mark.png"
 
+
+france_flag = open_image(path_flag)
+image_mark = open_image(path_mark)
 image_clown = open_image(path_clown,"L")
 image_noisy_Lena = open_image(path_noisy_lena)
 image_Lena = open_image(path_lena)
@@ -24,14 +29,20 @@ image_noise = open_image(path_noise, "L")
 #filtered_noise(image_noise)
 
 
-Lena_de_noise = median(image_noisy_Lena, 4)
-Lena_de_noise_equa = equlisation_exact(Lena_de_noise)
-histo_Lena,bin_lena = np.histogram(Lena_de_noise_equa, 255)
+# Lena_de_noise = median(image_noisy_Lena, 4)
+# Lena_de_noise_equa = equlisation_exact(Lena_de_noise)
+# histo_Lena,bin_lena = np.histogram(Lena_de_noise_equa, 255)
 
-plt.subplot(1,2,1)
-plt.bar(bin_lena[:-1],histo_Lena)
-plt.subplot(1,2,2)
-plt.imshow(Lena_de_noise_equa)
+# plt.subplot(1,2,1)
+# plt.bar(bin_lena[:-1],histo_Lena)
+# plt.subplot(1,2,2)
+# plt.imshow(Lena_de_noise_equa)
+
+
+
+Mark_france = picture_flag(image_mark, france_flag)
+
+plt.imshow(Mark_france)
 plt.show()
 
 
