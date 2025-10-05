@@ -14,48 +14,87 @@ def open_image(path, mode="RGB"):
     img = np.array(Image.open(path).convert(mode), int)
     return img
 
-def conv_product(image, filter):
+def conv_product(image, filter, im_type="RGB"):
+    if(im_type == "RGB"):
+        height, width, channels = image.shape
+        filter_height, filter_width = filter.shape
+        to_border = int(filter_height/2)
 
-    height, width, channels = image.shape
-    filter_height, filter_width = filter.shape
-    to_border = int(filter_height/2)
+        im_convo = np.zeros_like(image)
 
-    im_convo = np.zeros_like(image)
-
-    #normalistion du filtre
-    sum_coef = np.sum(filter)
-    if sum_coef == 0: sum_coef = 1
+        #normalistion du filtre
+        sum_coef = np.sum(filter)
+        if sum_coef == 0: sum_coef = 1
 
 
-    for c in range(channels):
+        for c in range(channels):
+            for y in range(to_border, height - to_border): #evite les effets de bord
+                for x in range(to_border, width - to_border):
+                    #on récupere la fentre autour du point(x,y)
+                    conv = image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1, c]
+                    value = np.sum(conv * filter) / sum_coef #on fait la somme et on normalise
+
+                    val = int(value)
+                    if val < 0: val = 0
+                    elif val > 255: val = 255
+
+                    im_convo[y, x, c] = val
+    else: 
+
+        height, width = image.shape
+        filter_height, filter_width = filter.shape
+        to_border = int(filter_height/2)
+
+        im_convo = np.zeros_like(image)
+
+        #normalistion du filtre
+        sum_coef = np.sum(filter)
+        if sum_coef == 0: sum_coef = 1
+
+
+            
         for y in range(to_border, height - to_border): #evite les effets de bord
             for x in range(to_border, width - to_border):
                 #on récupere la fentre autour du point(x,y)
-                conv = image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1, c]
+                conv = image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1]
                 value = np.sum(conv * filter) / sum_coef #on fait la somme et on normalise
 
                 val = int(value)
                 if val < 0: val = 0
                 elif val > 255: val = 255
 
-                im_convo[y, x, c] = val
+                im_convo[y, x] = val
 
     return im_convo
 
-def median(image, window_size):
-    height, width, channels = image.shape
-    to_border = int(window_size/2)
+def median(image, window_size, type_im):
+    if(type_im == "RGB"):
+            
+        height, width, channels = image.shape
+        to_border = int(window_size/2)
 
-    im_med = np.zeros_like(image)
+        im_med = np.zeros_like(image)
 
-    for c in range(channels):
+        for c in range(channels):
+            for y in range(to_border, height - to_border): #evite les effets de bord
+                for x in range(to_border, width - to_border):
+                    #on récupere la fentre autour du point(x,y)
+                    median = np.median(image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1, c])
+
+                    im_med[y, x, c] = median
+    else:
+        height, width = image.shape
+        to_border = int(window_size/2)
+
+        im_med = np.zeros_like(image)
+
         for y in range(to_border, height - to_border): #evite les effets de bord
             for x in range(to_border, width - to_border):
                 #on récupere la fentre autour du point(x,y)
-                median = np.median(image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1, c])
+                median = np.median(image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1])
 
-                im_med[y, x, c] = median
-
+                im_med[y, x] = median
+        
     return im_med
 
 
@@ -199,6 +238,26 @@ def equlisation_exact(image):
     im_ligne[im_ligne_sorted] = uniform_value
     equalized_image = im_ligne.reshape(image.shape).astype(int)
     return equalized_image
+
+def thresholding(image, threshold):
+    for y in range(image.shape[1]):
+        for x in range(image.shape[0]):
+            if image[x,y] > threshold :
+                image[x,y] = 255
+            else: image[x,y] = 0
+    return image
+
+def restoring_print_doc(image):
     
-def seuil(image):
-    
+    im_text_rest_equa = normalisation_histo(image)
+    im_text_rest_equa = median(im_text_rest_equa,3, "L")
+    im_text_rest_equa = equlisation_exact(im_text_rest_equa )
+    im_text_rest_equa = thresholding(im_text_rest_equa , 40)
+    im_text_rest_equa = median(im_text_rest_equa,2, "L")
+
+
+    plt.subplot(1,2,1)
+    plt.imshow(image, cmap="gray")
+    plt.subplot(1,2,2)
+    plt.imshow(im_text_rest_equa , cmap="gray")
+    plt.show()

@@ -44,8 +44,8 @@ image_noise = open_image(path_noise, "L")
 # Mark_france = picture_flag(image_mark, france_flag)
 
 # plt.imshow(Mark_france)
-im_text_rest_equa = equa_histo(im_text_rest)
-plt.imshow(im_text_rest, cmap="gray")
+# print_fft(im_text_rest_equa)
+# plt.imshow(im_text_rest, cmap="gray")
 plt.show()
 
 
