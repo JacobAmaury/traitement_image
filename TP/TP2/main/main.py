@@ -16,8 +16,9 @@ path_clown = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Ima
 path_noise = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/noise.tif"
 path_flag = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/France.png"
 path_mark = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Mark.png"
+path_text_rest = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/texte_a_restaurer.png"
 
-
+im_text_rest = open_image(path_text_rest, "L")
 france_flag = open_image(path_flag)
 image_mark = open_image(path_mark)
 image_clown = open_image(path_clown,"L")
@@ -40,9 +41,11 @@ image_noise = open_image(path_noise, "L")
 
 
 
-Mark_france = picture_flag(image_mark, france_flag)
+# Mark_france = picture_flag(image_mark, france_flag)
 
-plt.imshow(Mark_france)
+# plt.imshow(Mark_france)
+im_text_rest_equa = equa_histo(im_text_rest)
+plt.imshow(im_text_rest, cmap="gray")
 plt.show()
 
 

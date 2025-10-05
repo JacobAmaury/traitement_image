@@ -182,8 +182,8 @@ def histo_cumu(image):
     
 
 def equa_histo(image):
-    histo_cumu = histo_cumu
-    histo_cumu_normalized = histo_cumu * 255 / histo_cumu[-1]
+    histo_cumu1 = histo_cumu(image)
+    histo_cumu_normalized = histo_cumu1 * 255 / histo_cumu1[-1]
     LUT = histo_cumu_normalized.astype(np.uint8)
 
     return LUT[image]
@@ -199,4 +199,6 @@ def equlisation_exact(image):
     im_ligne[im_ligne_sorted] = uniform_value
     equalized_image = im_ligne.reshape(image.shape).astype(int)
     return equalized_image
+    
+def seuil(image):
     
