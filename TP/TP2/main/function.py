@@ -68,21 +68,21 @@ def conv_product(image, filter, im_type="RGB"):
     return im_convo
 
 def median(image, window_size, type_im):
-    if(type_im == "RGB"):
+    if(type_im == "RGB"): #
             
         height, width, channels = image.shape
         to_border = int(window_size/2)
 
-        im_med = np.zeros_like(image)
+        im_med = np.zeros_like(image) #creat an array of the same size as the image
 
         for c in range(channels):
             for y in range(to_border, height - to_border): #evite les effets de bord
                 for x in range(to_border, width - to_border):
-                    #on récupere la fentre autour du point(x,y)
+                    #compute the median
                     median = np.median(image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1, c])
 
                     im_med[y, x, c] = median
-    else:
+    else:# same thing but for gray scale 
         height, width = image.shape
         to_border = int(window_size/2)
 
@@ -90,7 +90,6 @@ def median(image, window_size, type_im):
 
         for y in range(to_border, height - to_border): #evite les effets de bord
             for x in range(to_border, width - to_border):
-                #on récupere la fentre autour du point(x,y)
                 median = np.median(image[y - to_border : y + to_border + 1, x - to_border : x + to_border + 1])
 
                 im_med[y, x] = median
@@ -100,6 +99,7 @@ def median(image, window_size, type_im):
 
 
 def poivre_sel(image, prob):
+    """Prob should be between 0 and 1"""
     width, height, chanel = image.shape
     noisy_image = np.zeros_like(image)
     
@@ -107,72 +107,19 @@ def poivre_sel(image, prob):
         for x in range(0, width, 2):
             random_value = rd.random()
             if(random_value < prob):
-                noisy_image[x-1:x+1, y-1:y+1, :] = 255
+                noisy_image[x-1:x+1, y-1:y+1, :] = 255 #put a square of white pixels
             else:
                 noisy_image[x-1:x+1, y-1:y+1, :] = image[x-1:x+1, y-1:y+1, :] 
             
             
             
-    return noisy_image 
+    return noisy_image.astype(int) 
 
 def fft_im(image):
     return np.fft.fft2(image)
 
-def filtered_clown(image_clown):
-    clown_fft = np.fft.fft2(image_clown) 
-    clown_fft_shift = np.fft.fftshift(clown_fft)
-    clown_fft_shift[75:95, 10:30] = 0
-    clown_fft_shift[30:50, 96:116] = 0
-    clown_fft_shift[45:55, 35:45] = 0
-    clown_fft_shift[70:80, 80:90] = 0
-
-    clown_shift2 = np.fft.fftshift(clown_fft_shift)
-    clown_recon = np.fft.ifft2(clown_shift2)
-
-    plt.figure(figsize=(12,6))
-
-    plt.subplot(1,3,3)
-    plt.imshow(np.real(clown_recon), cmap="gray")
-    plt.axis("off")
-
-    plt.subplot(1,3,2)
-    plt.imshow(np.log(np.abs(clown_fft_shift)), cmap="gray")
-    plt.axis("off")
 
 
-    plt.subplot(1,3,1)
-    plt.imshow(image_clown, cmap="gray")
-    plt.axis("off")
-
-    plt.show()
-
-
-
-def filtered_noise(image_noice):
-    noise_fft = np.fft.fft2(image_noice)
-    noise_fft_shift = np.fft.fftshift(noise_fft)
-    noise_fft_shift[124:129, :65] = 0
-    noise_fft_shift[124:129, 185:] = 0
-    noise_shift2 = np.fft.fftshift(noise_fft_shift)
-    noise_recon = np.fft.ifft2(noise_shift2)
-
-    plt.figure(figsize=(12,6))
-
-    plt.subplot(1,3,3)
-    plt.imshow(np.real(noise_recon), cmap="gray")
-    plt.axis("off")
-
-    plt.subplot(1,3,2)
-    plt.imshow(np.log(np.abs(noise_fft_shift)), cmap="gray")
-    plt.axis("off")
-
-
-    plt.subplot(1,3,1)
-    plt.imshow(image_noice, cmap="gray")
-    plt.axis("off")
-
-    plt.show()
-    
 def print_fft(image):
     fft = np.fft.fft2(image)
     fft_shift = np.fft.fftshift(fft)
