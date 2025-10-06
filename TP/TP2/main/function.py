@@ -121,24 +121,14 @@ def fft_im(image):
 
 
 def print_fft(image):
-    fft = np.fft.fft2(image)
-    fft_shift = np.fft.fftshift(fft)
+    fft = np.fft.fft2(image) #do the fft
+    fft_shift = np.fft.fftshift(fft) #center the fft around 0
     plt.subplot(1,2,1)
     plt.imshow(image, cmap='gray')
     plt.subplot(1,2,2)
-    plt.imshow(np.log(np.abs(fft_shift)), cmap='gray')
+    plt.imshow(np.log(np.abs(fft_shift)), cmap='gray') #log scale
     plt.show()
     
-
-def crop_image(image_to_crop, dimensions):
-    x, y, _ = image_to_crop.shape 
-    center_x = x // 2
-    center_y = y // 2
-    
-    crop_image = image_to_crop[
-        center_x - dimensions[0]//2 : center_x + dimensions[0]//2,
-        center_y-1 - dimensions[1]//2 : center_y + dimensions[1]//2]
-    return crop_image 
     
 def picture_flag(image, flag):
     image = image.astype(np.uint8)
@@ -146,9 +136,9 @@ def picture_flag(image, flag):
 
     flag = flag.astype(np.uint8)
     flag = Image.fromarray(flag)
-    flag = flag.resize(image.size)
+    flag = flag.resize(image.size)  # resize using the lib PIL
 
-    result = ((np.array(image).astype(int) + np.array(flag).astype(int)) / 2)
+    result = ((np.array(image).astype(int) + np.array(flag).astype(int)) / 2) # add the flag and mean
     return result.astype(int)
 
 def normalisation_histo(image):
@@ -189,58 +179,38 @@ def thresholding(image, threshold):
     im_thresh = np.zeros_like(image)
     for y in range(image.shape[1]):
         for x in range(image.shape[0]):
-            if image[x,y] > threshold :
+            if image[x,y] > threshold : #if the value is over threshold the value is 255 else 0
                 im_thresh[x,y] = 255
             else: im_thresh[x,y] = 0
     return im_thresh
 
     
-def dilatation(im):
+def dilatation(im, structural_element):
     img = im / 255
     result = np.zeros_like(img)
     
-    structural_element = np.array([[0,1,0],
-                                   [1,1,1],
-                                   [0,1,0]])
-    
     for x in range(1, img.shape[0]-1):
         for y in range(1, img.shape[1]-1):
-            actual_point = img[x-1:x+2, y-1:y+2]  
-            if np.sum(actual_point * structural_element) > 0:
+            actual_point = img[x-1:x+2, y-1:y+2]  #we multiply the structural element by the window around the pixel
+            if np.sum(actual_point * structural_element) > 0: #then we do the sum and if it's over 0 we put a 1 
                 result[x, y] = 1
     
     return (result * 255)
 
 
-def erosion(im):
+def erosion(im, structural_element):
     img = im / 255
-    result = np.zeros_like(img)
-    
-    structural_element = np.array([[0,1,0],
-                                   [1,1,1],
-                                   [0,1,0]])
+    result = np.zeros_like(img) 
+    struct_sum = np.sum(structural_element)
     
     for x in range(1, img.shape[0]-1):
         for y in range(1, img.shape[1]-1):
-            actual_point = img[x-1:x+2, y-1:y+2]  
+            actual_point = img[x-1:x+2, y-1:y+2]  #that's the same thing but in the if we have == 5
             if np.sum(actual_point * structural_element) == 5:
                 result[x, y] = 1
     
     return (result * 255)
 
 
-def zone_equa_histo(image, num_bloc):
-    width, height = image.shape #Only gray scale image
-    zone_equa_image = np.zeros_like(image)
-    step_x = width//num_bloc
-    step_y = height//num_bloc
-    for y in range(0,height, step_y):
-        for x in range(0, width, step_x):
-                    
-            histo_cumu1 = histo_cumu(image[x:x+step_x, y:y+step_y])
-            histo_cumu_normalized = histo_cumu1 * 255 / histo_cumu1[-1]
-            LUT = histo_cumu_normalized.astype(np.uint8)
-            zone_equa_image[x:x+(step_x), y:y+(step_y)] = LUT[image[x:x+step_x, y:y+step_y]]
-    return zone_equa_image
 
 
