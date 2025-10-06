@@ -3,52 +3,18 @@
 # * Date   : 03102025 08:49:38     ZZZzz  /,`.-'`'    -.  ;-;;,_
 # *                                      |,4-  ) )-,_. ,\ (  `'-' 
 # */                                    '---''(_/--'  `-'\_)
-
-
-# import numpy as np
-# from PIL import Image
-# import matplotlib.pyplot as plt
-# from function import *
 import os 
 import sys
 import time
 import q1
-
-# path_flag = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/France.png"
-# path_mark = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Mark.png"
-# path_text_rest = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/texte_a_restaurer.png"
+import q2
+import q3
+import q4
+import q5
+import q6
 # path_photo_rest = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/photo_a_restaurer.png"
 
 # image_photo_rest = open_image(path_photo_rest, "L")
-# im_text_rest = open_image(path_text_rest, "L")
-# france_flag = open_image(path_flag)
-# image_mark = open_image(path_mark)
-# image_clown = open_image(path_clown,"L")
-# image_noisy_Lena = open_image(path_noisy_lena)
-# image_Lena = open_image(path_lena)
-# image_noise = open_image(path_noise, "L")
-
-#filtered_clown(image_clown)
-#filtered_noise(image_noise)
-
-
-# Lena_de_noise = median(image_noisy_Lena, 4)
-# Lena_de_noise_equa = equlisation_exact(Lena_de_noise)
-# histo_Lena,bin_lena = np.histogram(Lena_de_noise_equa, 255)
-
-# plt.subplot(1,2,1)
-# plt.bar(bin_lena[:-1],histo_Lena)
-# plt.subplot(1,2,2)
-# plt.imshow(Lena_de_noise_equa)
-
-
-
-# Mark_france = picture_flag(image_mark, france_flag)
-
-# plt.imshow(Mark_france)
-# image_photo_rest
-
-
 
 # plt.subplot(1,2,1)
 # plt.imshow(image_photo_rest, cmap="gray")
@@ -84,10 +50,28 @@ def menu():
             clear_screen()
             q1.run_q1()
             pause()
-        elif choice == "0":
-            print("tptp")
-        else:
-            print("tata")    
+        elif choice == "2":
+            clear_screen()
+            q2.run_q2()
+            pause()
+        elif choice == "3":
+            clear_screen()
+            q3.run_q3()
+            pause()
+        elif choice == "4":
+            clear_screen()
+            q4.run_q4()
+            pause()
+        elif choice == "5":
+            clear_screen()
+            q5.run_q5()
+            pause()
+        elif choice == "6":
+            clear_screen()
+            q6.run_q6()
+            pause()
+        elif choice == "7":
+            break    
 
 
 menu()

@@ -140,18 +140,17 @@ def crop_image(image_to_crop, dimensions):
         center_y-1 - dimensions[1]//2 : center_y + dimensions[1]//2]
     return crop_image 
     
-    
-
-#Ne fait pas exactement la bonne. Elle devrait changer la résolution de l'image pour l'adpter au drapeau
-#Mais elle recadre 
 def picture_flag(image, flag):
-    image_crop = crop_image(image, flag.shape)
-    image_flag = (image_crop + flag) / 2
-    image_flag = np.clip(image_flag, 0, 255)
-    
-    return image_flag.astype(int)
+    image = image.astype(np.uint8)
+    image = Image.fromarray(image)
 
-    
+    flag = flag.astype(np.uint8)
+    flag = Image.fromarray(flag)
+    flag = flag.resize(image.size)
+
+    result = ((np.array(image).astype(int) + np.array(flag).astype(int)) / 2)
+    return result.astype(int)
+
 def normalisation_histo(image):
     I_max = np.max(image)
     I_min = np.min(image)
@@ -187,24 +186,61 @@ def equlisation_exact(image):
     return equalized_image
 
 def thresholding(image, threshold):
+    im_thresh = np.zeros_like(image)
     for y in range(image.shape[1]):
         for x in range(image.shape[0]):
             if image[x,y] > threshold :
-                image[x,y] = 255
-            else: image[x,y] = 0
-    return image
+                im_thresh[x,y] = 255
+            else: im_thresh[x,y] = 0
+    return im_thresh
 
-def restoring_print_doc(image):
     
-    im_text_rest_equa = normalisation_histo(image)
-    im_text_rest_equa = median(im_text_rest_equa,3, "L")
-    im_text_rest_equa = equlisation_exact(im_text_rest_equa )
-    im_text_rest_equa = thresholding(im_text_rest_equa , 40)
-    im_text_rest_equa = median(im_text_rest_equa,2, "L")
+def dilatation(im):
+    img = im / 255
+    result = np.zeros_like(img)
+    
+    structural_element = np.array([[0,1,0],
+                                   [1,1,1],
+                                   [0,1,0]])
+    
+    for x in range(1, img.shape[0]-1):
+        for y in range(1, img.shape[1]-1):
+            actual_point = img[x-1:x+2, y-1:y+2]  
+            if np.sum(actual_point * structural_element) > 0:
+                result[x, y] = 1
+    
+    return (result * 255)
 
 
-    plt.subplot(1,2,1)
-    plt.imshow(image, cmap="gray")
-    plt.subplot(1,2,2)
-    plt.imshow(im_text_rest_equa , cmap="gray")
-    plt.show()
+def erosion(im):
+    img = im / 255
+    result = np.zeros_like(img)
+    
+    structural_element = np.array([[0,1,0],
+                                   [1,1,1],
+                                   [0,1,0]])
+    
+    for x in range(1, img.shape[0]-1):
+        for y in range(1, img.shape[1]-1):
+            actual_point = img[x-1:x+2, y-1:y+2]  
+            if np.sum(actual_point * structural_element) == 5:
+                result[x, y] = 1
+    
+    return (result * 255)
+
+
+def zone_equa_histo(image, num_bloc):
+    width, height = image.shape #Only gray scale image
+    zone_equa_image = np.zeros_like(image)
+    step_x = width//num_bloc
+    step_y = height//num_bloc
+    for y in range(0,height, step_y):
+        for x in range(0, width, step_x):
+                    
+            histo_cumu1 = histo_cumu(image[x:x+step_x, y:y+step_y])
+            histo_cumu_normalized = histo_cumu1 * 255 / histo_cumu1[-1]
+            LUT = histo_cumu_normalized.astype(np.uint8)
+            zone_equa_image[x:x+(step_x), y:y+(step_y)] = LUT[image[x:x+step_x, y:y+step_y]]
+    return zone_equa_image
+
+
