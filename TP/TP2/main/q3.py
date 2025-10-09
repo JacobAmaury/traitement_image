@@ -7,8 +7,8 @@ def run_q3():
     print("Question 3: supression of noise")
     print("As we can see it works quite well in the image of mercury but on the second image we have to much noise so the cleaned image is too smooth.")
     print("Do not forget to close the matplotlib window in order to go back to the menu")
-    path_mecury = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/mercury.tif"
-    path_noisy_lena = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/noisy_Lena.png"
+    path_mecury = "../Images_TP/mercury.tif"
+    path_noisy_lena = "../Images_TP/noisy_Lena.png"
     
     im_mercury = open_image(path_mecury)
     im_noisy_lena = open_image(path_noisy_lena)

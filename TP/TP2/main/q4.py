@@ -3,8 +3,8 @@ from PIL import Image
 import matplotlib.pyplot as plt
 from function import *
 
-path_flag = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/France.png"
-path_mark = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Mark.png"
+path_flag = "../Images_TP/France.png"
+path_mark = "../Images_TP/Mark.png"
 france_flag = open_image(path_flag)
 image_mark = open_image(path_mark)
 

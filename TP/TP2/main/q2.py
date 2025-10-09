@@ -8,8 +8,8 @@ def run_q2():
     print("Question 2: Periodic noise filtering ")
     print("As we can see in the middle pictures I have masked some points. These points correspond to the periodic motif so if we mask them and do the ifft the periodic modif desappear")
     print("Do not forget to close the matplotlib window in order to go back to the menu")
-    path_clown = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/clown.tif"
-    path_noise = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/noise.tif"
+    path_clown = "../Images_TP/clown.tif"
+    path_noise = "../Images_TP/noise.tif"
     image_clown = open_image(path_clown, "L")
     image_noise = open_image(path_noise, "L")
     

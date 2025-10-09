@@ -8,7 +8,7 @@ def run_q1():
     print("As we can see the image on the left as been smoothed but we dont have any noise left.")
     print("The computation time is quite long (1min)")
     print("Do not forget to close the matplotlib window in order to go back to the menu")
-    path_lena = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Lena.jpg" 
+    path_lena = "../Images_TP/Lena.jpg" 
     image_Lena = open_image(path_lena)
     Lena_bruit = poivre_sel(image_Lena, 0.1)
     Lena_debruit = median(Lena_bruit, 3, "RGB")

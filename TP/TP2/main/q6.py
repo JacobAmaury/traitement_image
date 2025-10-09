@@ -7,7 +7,7 @@ def run_q6():
     print("6: Restauration of printed document")
     print("I have tried many approaches, but this is the best solution I’ve found. First, I applied a threshold, then a median filter, and finally an erosion and a dilation.")
     print("Do not forget to close the matplotlib window in order to go back to the menu")
-    path_text_rest = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/texte_a_restaurer.png"
+    path_text_rest = "../Images_TP/texte_a_restaurer.png"
     im_text_rest = open_image(path_text_rest, "L") 
  
     structural_element_circle = np.array([[1,1,1],

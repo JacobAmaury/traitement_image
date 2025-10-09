@@ -9,7 +9,7 @@ def run_q5():
     print("5: Histogramme equalisation")
     print("As we can see the histogramme equalized take the full range of gray lvl. The third histogramme took all the range of gray lvl and all the bins have the same height.")
     print("Do not forget to close the matplotlib window in order to go back to the menu")
-    path_lena = "/home/amaury/Desktop/Cours/M1/S1/intro_Traitement_image/TP/TP2/Images_TP/Lena.jpg" 
+    path_lena = "../Images_TP/Lena.jpg" 
     image_Lena = open_image(path_lena, "L")
     
     histo_base, bin = np.histogram(image_Lena, 255  )
