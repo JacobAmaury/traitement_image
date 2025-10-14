@@ -7,10 +7,9 @@
 import numpy as np
 from PIL import Image 
 import matplotlib.pyplot as plt
-from skimage.feature import match_descriptors, plot_matched_features, SIFT
-from skimage.feature import match_descriptors
-from skimage import io, color
+from scipy.ndimage import laplace
 import cv2
+
 
 
 
@@ -19,14 +18,35 @@ def open_image(path, mode="RGB"):
     return img
 import numpy as np
 
-def refocus(image_1, image_2, image_3):
-    h, w, c = image_1.shape
-    new_image = np.zeros_like(image_1)
-    
-    new_image[:125,:,:] = image_3[:125,:,:]
-    new_image[125:200,:,:] = image_2[125:200,:,:]
-    new_image[200:h,:,:] = image_1[200:h,:,:] 
+
+def contrast_image(image_path):
+    image = open_image(image_path)
+    image_grey = open_image(image_path, "L")
+    contrast_image = np.abs(laplace(image_grey))
+
+    return contrast_image, image
+
+
+def refocus(path_images):
+    contrasts = []
+    images = []
+    for path in path_images:
+        contrast, image = contrast_image(path)
+        contrasts.append(contrast)
+        images.append(image)
+
+    contrasts = np.stack(contrasts)
+    images = np.stack(images) # creat an array of 3 images, x, y, rgb
+
+    best_image = np.argmax(contrasts, axis=0) # best image
+    new_image = np.zeros_like(images[0])
+    h, w, c = images[0].shape 
+    for y in range(h):
+        for x in range(w):
+            new_image[y,x,:] = images[best_image[y,x],y,x,:]
+
     return new_image
+
 
 def energy_map_sobel(img):
     gray = 0.299 * img[:, :, 0] + 0.587 * img[:, :, 1] + 0.114 * img[:, :, 2]
