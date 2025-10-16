@@ -22,7 +22,7 @@ plt.show()
 
 #QUESTION3
 
-# resize = func.open_image("../Images_TP/Resize.png", "RGB")
-# energy = func.energy_map_sobel(resize)
-# plt.imshow(energy, cmap='gray')
-# plt.show()
+resize = func.open_image("../Images_TP/Resize.png", "RGB")
+energy = func.energy_map_sobel(resize)
+plt.imshow(energy, cmap='gray')
+plt.show()

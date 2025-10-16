@@ -77,12 +77,31 @@ def energy_map_sobel(img):
 
 def min_path(img):
     energy = energy_map_sobel(img)
-    w, h = energy.shape
-    x_start = 0
-    coord_min = []
-    for x in range(w):
-        test = energy[0,x] + energy[1,x]
-        if test > energy:
-            energy=test 
+    h, w = energy.shape
+    coords = np.empty((h,w), dtype=object) 
+    sum_energys = np.zeros(w)
     
-    
+    for y in range(1,h-1):
+        for x in range(1,w-1):
+            neighbors = [
+                (energy[y+1, x-1], (y+1, x-1)),
+                (energy[y+1, x],   (y+1, x)),
+                (energy[y+1, x+1], (y+1, x+1))]
+            
+            min_energy = 1e10
+            min_coord = 0
+            for i in range(3):
+                min_energy_act, min_coord_act = neighbors[i]
+                if min_energy_act < min_energy:
+                    min_energy = min_energy_act
+                    min_coord = min_coord_act
+                
+                 
+            sum_energys[x] += min_energy
+            coords[y, x] = min_coord
+            
+    index_opt = np.argmin(sum_energys)
+    optimal_coords = [coords[y, index_opt] for y in range(h) if coords[y, index_opt] is not None]
+    sum_min_energy = sum_energys[index_opt]
+
+    return energy, coords, sum_energys, optimal_coords, sum_min_energy
