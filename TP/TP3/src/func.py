@@ -16,7 +16,6 @@ import cv2
 def open_image(path, mode="RGB"):
     img = np.array(Image.open(path).convert(mode), int)
     return img
-import numpy as np
 
 
 def contrast_image(image_path):
@@ -75,33 +74,46 @@ def energy_map_sobel(img):
 
     return energy
 
-def min_path(img):
-    energy = energy_map_sobel(img)
-    h, w = energy.shape
-    coords = np.empty((h,w), dtype=object) 
-    sum_energys = np.zeros(w)
-    
-    for y in range(1,h-1):
-        for x in range(1,w-1):
-            neighbors = [
-                (energy[y+1, x-1], (y+1, x-1)),
-                (energy[y+1, x],   (y+1, x)),
-                (energy[y+1, x+1], (y+1, x+1))]
-            
-            min_energy = 1e10
-            min_coord = 0
-            for i in range(3):
-                min_energy_act, min_coord_act = neighbors[i]
-                if min_energy_act < min_energy:
-                    min_energy = min_energy_act
-                    min_coord = min_coord_act
-                
-                 
-            sum_energys[x] += min_energy
-            coords[y, x] = min_coord
-            
-    index_opt = np.argmin(sum_energys)
-    optimal_coords = [coords[y, index_opt] for y in range(h) if coords[y, index_opt] is not None]
-    sum_min_energy = sum_energys[index_opt]
+def min_paths(img):
+    energys = energy_map_sobel(img)
+    h, w = energys.shape
 
-    return energy, coords, sum_energys, optimal_coords, sum_min_energy
+    cumul_energys = np.zeros_like(energys)
+    cumul_energys[0,:] = energys[0,:] #initialisation
+    
+    for i in range(1,h):
+        for j in range(w):
+            #we do this in order to read the energy image only once
+            energys_upper = np.empty(3)
+            if j>0 and j<w-1:
+                energys_upper = np.array([cumul_energys[i-1,j-1], cumul_energys[i-1,j], cumul_energys[i-1,j+1]])
+            elif j == 0: 
+                energys_upper = np.array([np.inf, cumul_energys[i-1,j], cumul_energys[i-1,j+1]])
+            elif j == w-1: 
+                energys_upper = np.array([cumul_energys[i-1,j-1], cumul_energys[i-1,j], np.inf])
+            cumul_energys[i,j] = energys[i,j] + np.min(energys_upper)
+    
+    return cumul_energys
+
+def seam_carving(img):
+    cumul_energys = min_paths(img)
+    h, w = cumul_energys.shape
+    new_image = np.zeros((h,w-1,3), dtype=img.dtype) #RGB
+    j_min = np.argmin(cumul_energys[h-1,:])
+    
+    for i in range(h-1, 0, -1): 
+        energys_upper = np.empty(3)
+        if j_min>0 and j_min<w-1:
+            energys_upper = [cumul_energys[i-1,j_min-1], cumul_energys[i-1,j_min],cumul_energys[i-1,j_min+1]]
+        elif j_min == 0: 
+            energys_upper = [np.inf, cumul_energys[i-1,j_min],cumul_energys[i-1,j_min+1]]
+        elif j_min == w-1: 
+            energys_upper = [cumul_energys[i-1,j_min-1], cumul_energys[i-1,j_min],np.inf]
+        
+        new_image[i,:,:] = np.delete(img[i,:,:], j_min, axis=0)     
+        offset = np.argmin(energys_upper)-1 #-1, 0 or 1
+        j_min += offset
+        
+    
+    
+    return new_image
