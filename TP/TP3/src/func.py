@@ -102,3 +102,13 @@ def seam_carving(img):
     
     
     return new_image
+
+from scipy.ndimage import gaussian_filter
+def focus_center(img, center_width, off_center):
+    h, w, _ = img.shape
+    center = w//2 - off_center
+    mask = img.copy()
+    mask[:,center-center_width//2:center+center_width//2,:] = 0 #add black border kinda pretty
+    mask = gaussian_filter(mask,sigma=(1, 1, 0))
+    mask[:,center-center_width//2:center+center_width//2,:] = img[:,center-center_width//2:center+center_width//2,:]
+    return mask
