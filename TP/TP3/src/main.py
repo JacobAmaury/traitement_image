@@ -21,7 +21,6 @@ import cv2
 # func.mosaic(mosaic_1, mosaic_2)
 
 #QUESTION3
-#This function is so slow this is a shame
 resize = func.open_image("../Images_TP/Resize.png", "RGB")
 resized = resize.copy()
 for i in range(100):

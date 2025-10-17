@@ -47,28 +47,13 @@ def refocus(path_images):
     return new_image
 
 
+from scipy import ndimage
+
+#question 3 was done using this source https://andrewdcampbell.github.io/seam-carving
 def energy_map_sobel(img):
     gray = 0.299 * img[:, :, 0] + 0.587 * img[:, :, 1] + 0.114 * img[:, :, 2]
 
-    h, w = gray.shape
-
-    sobel_x = np.array([[-1, 0, 1],
-                        [-2, 0, 2],
-                        [-1, 0, 1]])
-    sobel_y = np.array([[-1, -2, -1],
-                        [ 0,  0,  0],
-                        [ 1,  2,  1]])
-
-    padded = np.pad(gray, ((1, 1), (1, 1)), mode='edge')
-    Gx = np.zeros_like(gray)
-    Gy = np.zeros_like(gray)
-
-    for i in range(h):
-        for j in range(w):
-            region = padded[i:i+3, j:j+3]
-            Gx[i, j] = np.sum(region * sobel_x)
-            Gy[i, j] = np.sum(region * sobel_y)
-
+    Gy, Gx = np.gradient(gray)
     energy = np.sqrt(Gx**2 + Gy**2)
     energy = (energy - energy.min()) / (energy.max() - energy.min())
 
