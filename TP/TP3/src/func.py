@@ -104,6 +104,7 @@ def seam_carving(img):
     return new_image
 
 from scipy.ndimage import gaussian_filter
+
 def focus_center(img, center_width, off_center):
     h, w, _ = img.shape
     center = w//2 - off_center
@@ -111,4 +112,31 @@ def focus_center(img, center_width, off_center):
     mask[:,center-center_width//2:center+center_width//2,:] = 0 #add black border kinda pretty
     mask = gaussian_filter(mask,sigma=(1, 1, 0))
     mask[:,center-center_width//2:center+center_width//2,:] = img[:,center-center_width//2:center+center_width//2,:]
+    return mask
+
+
+
+def focus_two_zones(img,
+                    zone1_center, zone1_width, z1_top, z1_bottom,
+                    zone2_center, zone2_width, z2_top, z2_bottom):
+
+    h, w, _ = img.shape
+
+    blur_light = gaussian_filter(img, sigma=(2, 2, 0))
+    blur_strong = gaussian_filter(img, sigma=(8, 8, 0))
+
+    mask = blur_strong.copy()
+
+    center2 = int(w * zone2_center)
+    w2 = int(w * zone2_width / 2)
+    top2 = int(h * z2_top)
+    bottom2 = int(h * z2_bottom)
+    mask[top2:bottom2, center2 - w2:center2 + w2, :] = blur_light[top2:bottom2, center2 - w2:center2 + w2, :]
+
+    center1 = int(w * zone1_center)
+    w1 = int(w * zone1_width / 2)
+    top1 = int(h * z1_top)
+    bottom1 = int(h * z1_bottom)
+    mask[top1:bottom1, center1 - w1:center1 + w1, :] = img[top1:bottom1, center1 - w1:center1 + w1, :]
+
     return mask

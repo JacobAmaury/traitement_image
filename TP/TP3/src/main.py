@@ -10,10 +10,10 @@ import numpy as np
 import cv2
 
 #QUESTION1
-path_images = ["../Images_TP/Refocus_1.png", "../Images_TP/Refocus_2.png", "../Images_TP/Refocus_3.png"]
-refocus = func.refocus(path_images)
-plt.imshow(refocus)
-plt.show()
+# path_images = ["../Images_TP/Refocus_1.png", "../Images_TP/Refocus_2.png", "../Images_TP/Refocus_3.png"]
+# refocus = func.refocus(path_images)
+# plt.imshow(refocus)
+# plt.show()
 
 #QUESTION2
 # mosaic_1 = "../Images_TP/Mosaic_1.png"
@@ -31,6 +31,24 @@ plt.show()
 # plt.subplot(1,2,2)
 # plt.imshow(resized)
 # plt.show()
+
+#QUESTION4
+img = func.open_image("../Images_TP/Profondeur.png")
+result = func.focus_two_zones(img,
+                         zone1_center=0.70, zone1_width=0.50, z1_top=0.0, z1_bottom=1,
+                         zone2_center=0.40, zone2_width=0.15, z2_top=0.3, z2_bottom=1)
+
+plt.figure(figsize=(10,5))
+plt.subplot(1,2,1)
+plt.title("Image originale")
+plt.imshow(img)
+plt.axis('off')
+
+plt.subplot(1,2,2)
+plt.title("Effet de profondeur de champ")
+plt.imshow(result)
+plt.axis('off')
+plt.show()
 
 #QUESTION5
 # eiffel = func.open_image("../Images_TP/tour-eiffel.jpg", "RGB")
