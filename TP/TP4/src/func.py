@@ -41,7 +41,7 @@ def all_RGB(image):
         for x in range(w):
             R,G,B = image[y,x]
             triplet = (int(R), int(G), int(B))
-            
+
             while triplet in used_pixel:      
 
                 outR = triplet[0]+rd.randint(-max_rand,max_rand)
@@ -74,12 +74,32 @@ def object_measure(image):
     binary = image > threshold
     binary = binary_dilation(binary, structure=struct, iterations=2)
     binary = binary_erosion(binary, structure=struct, iterations=2)
+    binary_2 = binary[20:-20,20:-20] #avoid edge 
 
-    labeled = label(binary)
-    props = regionprops(labeled)
+    labeled_piece = label(~binary_2) 
+    props_piece = regionprops(labeled_piece)
+
+    labeled_holes = label(binary_2)
+    props_holes = regionprops(labeled_holes)
     
-    print(f"Nombre d'objets détectés : {labeled}")
+    cpt = 0
+    for i in range(1, len(props_holes)):
+        minr, minc, maxr, maxc = props_holes[i].bbox
+        largeur = maxc - minc
+        hauteur = maxr - minr
+        aire = props_holes[i].area
+        print(f"circle {cpt}: width={largeur}, height={hauteur}, surface={aire}")
+        cpt += 1
 
-    return binary.astype(int)
+    cpt = 0
+    for i in range(0, len(props_piece)):
+        minr, minc, maxr, maxc = props_piece[i].bbox
+        largeur = maxc - minc
+        hauteur = maxr - minr
+        aire = props_piece[i].area
+        print(f"object {cpt}: width={largeur}, height={hauteur}, surface={aire}")
+        cpt += 1
+
+    return binary_2.astype(int)
 
 
