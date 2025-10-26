@@ -41,20 +41,21 @@ def all_RGB(image):
         for x in range(w):
             R,G,B = image[y,x]
             triplet = (int(R), int(G), int(B))
+            
             while triplet in used_pixel:      
 
-                outR = int(triplet[0])+rd.randint(-max_rand,max_rand)
+                outR = triplet[0]+rd.randint(-max_rand,max_rand)
                 if outR>255: outR = 255
                 if outR<0: outR = 0
-                outG = int(triplet[1])+rd.randint(-max_rand,max_rand)
+                outG = triplet[1]+rd.randint(-max_rand,max_rand)
                 if outG>255: outG = 255
                 if outG<0: outG = 0
-                outB = int(triplet[2])+rd.randint(-max_rand,max_rand)
+                outB = triplet[2]+rd.randint(-max_rand,max_rand)
                 if outB>255: outB = 255
                 if outB<0: outB = 0
 
                 triplet = (outR, outG, outB)
-            image_2[y, x] = np.array([triplet[0], triplet[1], triplet[2]])
+            image_2[y, x] = triplet
             used_pixel.add(triplet)
     
     t2 = time.time()
