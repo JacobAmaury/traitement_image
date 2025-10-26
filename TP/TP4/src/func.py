@@ -85,21 +85,20 @@ def object_measure(image):
     cpt = 0
     for i in range(1, len(props_holes)):
         minr, minc, maxr, maxc = props_holes[i].bbox
-        largeur = maxc - minc
-        hauteur = maxr - minr
-        aire = props_holes[i].area
-        print(f"circle {cpt}: width={largeur}, height={hauteur}, surface={aire}")
+        width = maxc - minc
+        height = maxr - minr
+        surface = props_holes[i].area
+        print(f"circle {cpt}: width={width}, height={height}, surface={surface}")
         cpt += 1
 
     cpt = 0
     for i in range(0, len(props_piece)):
         minr, minc, maxr, maxc = props_piece[i].bbox
-        largeur = maxc - minc
-        hauteur = maxr - minr
-        aire = props_piece[i].area
-        print(f"object {cpt}: width={largeur}, height={hauteur}, surface={aire}")
+        width = maxc - minc
+        height = maxr - minr
+        surface = props_piece[i].area
+        print(f"object {cpt}: width={width}, height={height}, surface={surface}")
         cpt += 1
 
-    return binary_2.astype(int)
 
 
