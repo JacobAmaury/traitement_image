@@ -1,4 +1,3 @@
-
 import func
 import matplotlib.pyplot as plt
 

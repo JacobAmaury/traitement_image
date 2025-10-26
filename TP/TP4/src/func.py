@@ -5,6 +5,8 @@ from scipy.ndimage import binary_erosion
 from scipy.ndimage import binary_dilation
 from skimage.filters import threshold_otsu
 from skimage.measure import label, regionprops
+import random as rd
+import matplotlib.pyplot as plt
 
 
 def open_image(path, mode="RGB"):
@@ -26,7 +28,7 @@ def photomaton(image):
     return(new_image)
 
 
-import random as rd
+
 
 def all_RGB(image):
     t1 = time.time()
@@ -64,8 +66,6 @@ def all_RGB(image):
 
 
 
-
-
 def object_measure(image):
     struct = np.array([[0,1,0],
                        [1,1,1],
@@ -99,6 +99,3 @@ def object_measure(image):
         surface = props_piece[i].area
         print(f"object {cpt}: width={width}, height={height}, surface={surface}")
         cpt += 1
-
-
-
