@@ -28,3 +28,20 @@ def p_tild(image ,mode=0, alpha=50, sigma=1.0, omega=0.05):
 
     return p_tild
     
+def fast_marching(P_tild, init_point_x,init_point_y):
+    """This function compute the fast marching matching methode. 
+        take P_tild (can be compute with the functio P_tild) and the coordinate of the initial point"""
+    #initilisation
+    Us = np.empty_like(P_tild)
+    Us = np.inf
+    Us[init_point_y, init_point_x] = 0
+
+    labels = np.empty_like(P_tild) #FAR=0, TRIAL=1 and ALIVE = 2 
+    labels = 0 
+    labels[init_point_y, init_point_x] = 1
+
+    TRIAL_pixels = [(init_point_y, init_point_x)] #list of trial points
+
+    while len(TRIAL_pixels) != 0:
+        
+
