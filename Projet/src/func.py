@@ -16,7 +16,7 @@ def pretreatment(image):
     image = cv.GaussianBlur(image,(3,3),0)
     return image
 
-def p_tild(image ,mode=0, alpha=50, sigma=1.0, omega=0.05):
+def p_tild(image ,mode=0, alpha=50, omega=0.05):
     """This function compute p_tild. if mode = 0 P = exp(-alpha * g^2) else P = 1 / (1 + (g/sigma)^2)"""
     Gy, Gx = np.gradient(image)
     g = np.sqrt(Gx**2 + Gy**2)
@@ -25,7 +25,7 @@ def p_tild(image ,mode=0, alpha=50, sigma=1.0, omega=0.05):
     if mode == 0 :
         p = np.exp(-alpha*(g**2))
     else:
-        p = 1/(1+(g/sigma)**2)
+        p = 1/(1+alpha*g**2)
     p_tild = omega + p
 
     return p_tild
@@ -33,7 +33,7 @@ def p_tild(image ,mode=0, alpha=50, sigma=1.0, omega=0.05):
 
 
 def is_pix(x, y, max_x, max_y):
-
+    """return 1 when the x or y are not on the side"""
     if x >= 0 and x < max_x and y >= 0 and y < max_y:
         return 1
     return 0

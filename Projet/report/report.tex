@@ -1,14 +1,97 @@
 \documentclass{article}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}              
+\usepackage[french]{babel}
+\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage{amsmath, amssymb, graphicx, xcolor, hyperref}
 
-\title{Mon premier document LaTeX}
-\author{Amaury}
+
+\title{Global Minimum for Active Contour Models: A Minimal Path Approach}
+\author{JACOB Amaury}
 \date{\today}
 
 \begin{document}
 
 \maketitle
+\tableofcontents
 
-Bonjour, ceci est un test \LaTeX{} sous Windows avec VS Code !
+\section{Introduction}
+Le but de ce devoir est de comprendre, reproduire et critiquer un article.
+Mon article porte sur les contours actifs par une approche du chemin minimal.
+La méthode présentée dans cet article est une amélioration de la méthode des Snakes ;
+cependant, cette méthode ne nécessite que deux points comme initialisation.
+Elle a aussi pour avantage d'être moins sensible aux minima locaux
+et de donner le chemin minimal entre les deux points.
+
+Dans un premier temps, nous allons voir les bases mathématiques nécessaires
+pour comprendre l'article.
+
+\section{Comment calculer un contour avec un chemin minimal}
+\subsection{Calcule du potentiel $P$}
+
+Pour calculer le contour à l’aide du chemin minimal, il faut d’abord construire une carte de potentiel.  
+Cette carte repose sur le gradient de l'image et sur la norme du gradient.
+
+\begin{equation}
+\mathbf{\nabla I} =
+\begin{bmatrix}
+I'_x \\[4pt]
+I'_y
+\end{bmatrix}
+\quad\text{et}\quad
+\|\nabla I\| = \sqrt{(I'_x)^2 + (I'_y)^2}.
+\end{equation}
+
+Maintenant que nous avons calculé la norme du gradient, nous pouvons déterminer le potentiel $P$.
+Le potentiel $P(x,y)$ agit comme une mesure de "résistance" au passage du contour.
+Ainsi, plus le gradient est fort (bord marqué), plus le potentiel est faible.
+Le chemin minimal cherchera donc naturellement à suivre les bords de l’image.
+
+
+Dans l’article de référence, aucune expression explicite n’est donnée pour $P$.  
+J’ai donc cherché dans d’autres sources des définitions possibles du potentiel, en particulier dans deux travaux
+où les formules sont simples et peu coûteuses à calculer d’un point de vue numérique :
+
+\begin{equation}
+\begin{aligned}
+P_1(x,y) &= e^{-\alpha \|\nabla I(x,y)\|^2}, \\
+P_2(x,y) &= \frac{1}{1 + \alpha \|\nabla I(x,y)\|^2}.
+\end{aligned}
+\end{equation}
+
+Ces deux définitions apparaissent respectivement dans les articles de  
+Caselles \textit{et al.}, \textit{“Geodesic Active Contours”} (1997), et  
+Sethian \& Kimmel, \textit{“Computing Geodesic Paths”} (1998).
+
+C'est deux expression sont similaire mais une décroit de facons exponentiel 
+alors que l'autre décroit en $\frac{1}{x}$ ce qui est plus lent. Le choix va
+dépendre de l'image. 
+
+\subsection{Calcule de la métrique $\tilde{P}$}
+Une fois la carte de potentiel $P(x,y)$ calculée, elle est utilisée pour définir 
+une métrique de longueur $\tilde{P}$. 
+\begin{equation}
+\tilde{P} = \omega + P(p)
+\end{equation}
+$\omega$ est un terme qui représente le lissage de la courbe et $p$ est le point actuel.
+Cette métrique joue le role de vitesse dans l'équation Eikonal que nous allons voir. 
+
+
+\subsection{Equation Eikonal}
+L'équation Eikonal relie $\tilde{P}(x,y)$ et une fonction de coût $U(x,y)$. Cette fonction
+représente en chaque point de l'image le coût pour aller du point de départ a un point $(x,y)$
+de l'image.
+\begin{equation}
+\|\nabla U(x,y)\| = \tilde{P}(x,y),
+\end{equation}
+On initialise $U(p_0)$ à $0$, $U$ ne peut qu'augmenter donc on aura un seul minimun qui sera
+notre point de départ. On pourra juste descendre la pente $U$ pour avoir le chemin minimal.
+Pour cela nous allons utiliser le back-propagation.
+
+\subsection{Back-propagation du chemin minimal}
+
+
+
+
 
 \end{document}
