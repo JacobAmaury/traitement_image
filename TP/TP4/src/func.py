@@ -61,7 +61,7 @@ def all_RGB(image):
             used_pixel.add(triplet)
     
     t2 = time.time()
-    print(f"temps de calcule: {t2-t1}s")
+    print(f"\n\nCompute time: {t2-t1:.2f}s")
     return image_2.astype(int)
 
 

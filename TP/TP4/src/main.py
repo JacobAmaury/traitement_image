@@ -26,9 +26,9 @@ def menu():
         print("TP3")
         print("Question 5 and 6 are in src/question6 or 7")
         print("===============================")
-        print("1. Re-focusing of an image from a sequence.")
-        print("2. Context-Aware Image Resizing")
-        print("3. Context-Aware Image Resizing")
+        print("1. Le photomaton.")
+        print("2. All RGB")
+        print("3. Mesures")
         print("4. Exit")
         print("===============================")
         choice = 0

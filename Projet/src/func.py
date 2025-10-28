@@ -69,18 +69,21 @@ def fast_marching(P_tilds, init_point_x,init_point_y):
     heaps = [(init_point_y, init_point_x)] #list of trial points
 
 
-    min_value = np.inf
-    min_pix = (0,0)
     while len(heaps) != 0:
+        min_value = np.inf
+        min_pix = (0,0)
+
         for (point_y,point_x) in heaps:
             if Us[point_y,point_x] < min_value:
                 min_value = Us[point_y, point_x] 
                 min_pix =(point_y, point_x)
+
+        heaps.remove(min_pix)
         labels[min_pix[0], min_pix[1]] = ALIVE
 
         neighbours = pix_neighbours(min_pix[1], min_pix[0], max_x, max_y)
-
         for neighbour_y, neighbour_x in neighbours:
+
             if labels[neighbour_y,neighbour_x] != ALIVE:
                 current_U = solve_eikonal(Us, min_pix[0], min_pix[1], P_tilds)
 
@@ -89,9 +92,8 @@ def fast_marching(P_tilds, init_point_x,init_point_y):
                     if labels[neighbour_y,neighbour_x] == FAR:
                         heaps.append((neighbour_y,neighbour_x))
                         labels[neighbour_y,neighbour_x] = TRIAL
-                    elif labels[neighbour_y,neighbour_x] == TRIAL:
 
-
+    return Us
                 
 
 
