@@ -5,6 +5,8 @@ from scipy.ndimage import laplace
 import cv2 as cv
 
 def open_image(path, mode="RGB"):
+    """Take the path of the image and the mode of the return image
+        return an image wich is an np.array"""
     img = np.array(Image.open(path).convert(mode), int)
     return img
 
@@ -42,6 +44,9 @@ def fast_marching(P_tild, init_point_x,init_point_y):
 
     TRIAL_pixels = [(init_point_y, init_point_x)] #list of trial points
 
+
+
+
     while len(TRIAL_pixels) != 0:
-        
+
 
