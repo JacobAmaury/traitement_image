@@ -84,9 +84,23 @@ de l'image.
 \begin{equation}
 \|\nabla U(x,y)\| = \tilde{P}(x,y),
 \end{equation}
-On initialise $U(p_0)$ à $0$, $U$ ne peut qu'augmenter donc on aura un seul minimun qui sera
-notre point de départ. On pourra juste descendre la pente $U$ pour avoir le chemin minimal.
-Pour cela nous allons utiliser le back-propagation.
+avec la condition initiale $U(p_0)=0$.
+
+Dans l’article de Cohen et Kimmel, cette équation est résolue numériquement
+par la méthode du \textit{Fast Marching}.
+Cette méthode repose sur une propagation du front de niveau de $U$ :
+le front avance plus rapidement dans les zones où $\tilde{P}$ est faible (autour des bords)
+et plus lentement dans les zones où $\tilde{P}$ est élevée.
+
+Mathématiquement, l’espace est discrétisé en une grille, et pour chaque pixel $(i,j)$,
+on cherche la valeur de $U_{i,j}$ qui satisfait la version discrète de l’équation :
+\begin{equation}
+(\max\{U - U_{i-1,j}, U - U_{i+1,j}, 0\})^2 + 
+(\max\{U - U_{i,j-1}, U - U_{i,j+1}, 0\})^2 = \tilde{P}_{i,j}^2.
+\end{equation}
+Cette équation quadratique est résolue localement à chaque itération
+en utilisant uniquement les voisins déjà mis à jour (schéma \textit{upwind}),
+ce qui garantit la cohérence du front de propagation.
 
 \subsection{Back-propagation du chemin minimal}
 
