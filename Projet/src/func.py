@@ -75,6 +75,7 @@ def solve_eikonal(Us, pix_y, pix_x, P_tilds):
         U_new = (a + b + np.sqrt(2 * p_tild ** 2 - (a - b) ** 2)) / 2.0
     return U_new
 
+
 def fast_marching(P_tilds, init_point_x, init_point_y):
     max_y, max_x = P_tilds.shape
     Us = np.full_like(P_tilds, np.inf)

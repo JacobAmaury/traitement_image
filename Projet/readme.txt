@@ -1,0 +1,1 @@
+To run this code you should go in the src folder then open a terminal and type python3 main.py
