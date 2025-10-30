@@ -6,7 +6,7 @@ import time
 import image_1
 import image_2
 import image_3
-
+import image_4
 
 
 def clear_screen():
@@ -24,7 +24,8 @@ def menu():
         print("1. Image 1 working")
         print("2. Image 2 working")
         print("3. Image 3 working")
-        print("4. Exit")
+        print("4. Image 4 not working")
+        print("5. Exit")
         print("===============================")
         choice = 0
         choice = input("Choose one of the topics: ").strip()
@@ -42,6 +43,10 @@ def menu():
             image_3.run_image_3()
             pause()
         elif choice == "4":
+            clear_screen()
+            image_4.run_image_4()
+            pause()
+        elif choice == "5":
             break    
 
 

@@ -1,24 +1,25 @@
+
 import func
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 
-def run_image_3():
-    print("This image was find on internet (all the sources are in the images folder).\nThe parameters of p_tild are: mode=1, sigma=0.02, omega=0.01")
-    print("The computation time is approximately 14s")
+def run_image_4():
+    print("This image was find on internet (all the sources are in the images folder).\nThe parameters of p_tild are: mode=1, sigma=0.02, omega=0.1")
+    print("The computation time is approximately 5s")
     # Initialisation
-    start_x = 3
-    start_y = 66
-    end_x = 338
-    end_y = 221
-    image_path = "../images/3.png"
+    start_x = 30
+    start_y = 75
+    end_x = 271
+    end_y = 116
+    image_path = "../images/4.png"
 
     t1 = time.time()
     image = func.open_image(image_path, "L")
     image_pretreated = func.pretreatment(image)
     t2 = time.time()
     print(f"Preprocessing done in: {t2 - t1:.3f}s")
-    P_tilde = func.p_tild(image_pretreated, mode=1, alpha=50, sigma=0.02, omega=0.01)
+    P_tilde = func.p_tild(image_pretreated, mode=1, alpha=50, sigma=0.02, omega=0.1)
     t3 = time.time()
     print(f"Computation of P_tilde done in: {t3 - t2:.3f}s")
 

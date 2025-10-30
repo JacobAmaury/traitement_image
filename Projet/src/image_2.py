@@ -4,7 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def run_image_2():
-    print("This image was find on iternet (all the sources are in the images folder).\nThe parameters of p_tild are: mode=1, sigma=0.02, omega=0.1")
+    print("This image was find on internet (all the sources are in the images folder).\nThe parameters of p_tild are: mode=1, sigma=0.02, omega=0.1")
     print("The computation time is approximately 3s")
     # Initialisation
     start_x = 56

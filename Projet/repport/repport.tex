@@ -27,10 +27,11 @@ Dans un premier temps, nous allons voir les bases mathématiques nécessaires
 pour comprendre l'article.
 
 \section{Comment calculer un contour avec un chemin minimal}
-\subsection{Calcule du potentiel $P$}
+\subsection{Calcul du potentiel $P$}
 
-Pour calculer le contour à l’aide du chemin minimal, il faut d’abord construire une carte de potentiel.  
-Cette carte repose sur le gradient de l'image et sur la norme du gradient.
+Pour calculer le contour à l'aide du chemin minimal, il faut d'abord construire une 
+carte de potentiel. Cette carte repose sur le gradient de l'image et sur la norme 
+du gradient.
 
 \begin{equation}
 \mathbf{\nabla I} =
@@ -45,12 +46,12 @@ I'_y
 Maintenant que nous avons calculé la norme du gradient, nous pouvons déterminer le potentiel $P$.
 Le potentiel $P(x,y)$ agit comme une mesure de "résistance" au passage du contour.
 Ainsi, plus le gradient est fort (bord marqué), plus le potentiel est faible.
-Le chemin minimal cherchera donc naturellement à suivre les bords de l’image.
+Le chemin minimal cherchera donc naturellement à suivre les bords de l'image.
 
 
-Dans l’article de référence, aucune expression explicite n’est donnée pour $P$.  
-J’ai donc cherché dans d’autres sources des définitions possibles du potentiel, en particulier dans deux travaux
-où les formules sont simples et peu coûteuses à calculer d’un point de vue numérique :
+Dans l'article de référence, aucune expression explicite n'est donnée pour $P$.  
+J'ai donc cherché dans d'autres sources des définitions possibles du potentiel, en particulier dans deux travaux
+où les formules sont simples et peu coûteuses à calculer d'un point de vue numérique :
 
 \begin{equation}
 \begin{aligned}
@@ -63,37 +64,46 @@ Ces deux définitions apparaissent respectivement dans les articles de
 Caselles \textit{et al.}, \textit{“Geodesic Active Contours”} (1997), et  
 Sethian \& Kimmel, \textit{“Computing Geodesic Paths”} (1998).
 
-C'est deux expression sont similaire mais une décroit de facons exponentiel 
-alors que l'autre décroit en $\frac{1}{x}$ ce qui est plus lent. Le choix va
-dépendre de l'image. 
+Ces deux expressions sont similaire mais une décroit de facons exponentielle 
+alors que l'autre décroit en $\frac{1}{x}$ ce qui est plus lent. Le choix
+dépend de l'image. 
 
 \subsection{Calcul de la métrique $\tilde{P}$}
+
+
+
 Une fois la carte de potentiel $P(x,y)$ calculée, elle est utilisée pour définir 
 une métrique de longueur $\tilde{P}$. 
 \begin{equation}
 \tilde{P} = \omega + P(p)
 \end{equation}
-$\omega$ est un terme qui représente le lissage de la courbe et $p$ est le point actuel.
-Cette métrique joue le role de vitesse dans l'équation Eikonal que nous allons voir. 
+$\omega$ est un terme qui représente le lissage de la courbe et $p$ est le point 
+actuel. Cette métrique joue le rôle de vitesse dans l'équation Eikonal que nous 
+allons voir. 
+
 
 
 \subsection{Equation Eikonal}
-L'équation Eikonal relie $\tilde{P}(x,y)$ et une fonction de coût $U(x,y)$. Cette fonction
-représente en chaque point de l'image le coût pour aller du point de départ a un point $(x,y)$
-de l'image.
+
+
+
+L'équation Eikonal relie $\tilde{P}(x,y)$ et une fonction de coût $U(x,y)$. Cette 
+fonction représente en chaque point de l'image le coût pour aller du point de départ 
+à un point $(x,y)$ de l'image.
+
 \begin{equation}
 \|\nabla U(x,y)\| = \tilde{P}(x,y),
 \end{equation}
 avec la condition initiale $U(p_0)=0$.
 
-Dans l’article de Cohen et Kimmel, cette équation est résolue numériquement
+Dans l'article de Cohen et Kimmel, cette équation est résolue numériquement
 par la méthode du \textit{Fast Marching}.
 Cette méthode repose sur une propagation du front de niveau de $U$ :
 le front avance plus rapidement dans les zones où $\tilde{P}$ est faible (autour des bords)
 et plus lentement dans les zones où $\tilde{P}$ est élevée.
 
-Mathématiquement, l’espace est discrétisé en une grille, et pour chaque pixel $(i,j)$,
-on cherche la valeur de $U_{i,j}$ qui satisfait la version discrète de l’équation :
+Mathématiquement, l'espace est discrétisé en une grille, et pour chaque pixel $(i,j)$,
+on cherche la valeur de $U_{i,j}$ qui satisfait la version discrète de l'équation :
 \begin{equation}
 (\max\{U - U_{i-1,j}, U - U_{i+1,j}, 0\})^2 + 
 (\max\{U - U_{i,j-1}, U - U_{i,j+1}, 0\})^2 = \tilde{P}_{i,j}^2.
@@ -104,10 +114,10 @@ en utilisant uniquement les voisins déjà mis à jour.
 \subsection{Back-propagation du chemin minimal}
 
 
-Une fois la fonction $U(x,y)$ calculée sur toute l’image, 
+Une fois la fonction $U(x,y)$ calculée sur toute l'image, 
 on peut retrouver le contour recherché en suivant la direction opposée au gradient de $U$.
 Cette étape, appelée \textit{back-propagation}, correspond à la descente du long de la pente de $U$
-depuis le point d’arrivée $p_1$ jusqu’au point de départ $p_0$.
+depuis le point d'arrivée $p_1$ jusqu'au point de départ $p_0$.
 Le chemin obtenu correspond au chemin minimal reliant ces deux points 
 dans la métrique $\tilde{P}$.
 
@@ -117,11 +127,11 @@ Mathématiquement, la courbe $C(s)$ vérifie :
 \frac{dC(s)}{ds} = -\nabla U(C(s)), \quad C(0) = p_1,
 \end{equation}
 
-Quand on intégre l'expression (6) nous obtenons le chemin qui suit la pente la plus forte
+Quand on intègre l'expression (6) nous obtenons le chemin qui suit la pente la plus forte
 
 Dans l'article les auteurs expliquent que cela revient à une descente de gradient
 La méthode mache de facons suivante: On part de  $p_1$, et à chaque itération on choisit
-le voisin possédant la plus petite valeur de $U$, jusqu’à rejoindre $p_0$.
+le voisin possédant la plus petite valeur de $U$, jusqu'à rejoindre $p_0$.
 Cette procédure simple permet de reconstruire efficacement le contour global optimal
 après la propagation du front.
 
@@ -131,7 +141,6 @@ après la propagation du front.
 
 
 
-\newpage
 \section{Programmation}
 \subsection{Prétraitement de l'image}
 
@@ -188,7 +197,7 @@ Ces valeurs $a$ et $b$ représentent la distance minimale connue autour du pixel
 dans les deux directions.  
 
 Ensuite, je vérifie la différence entre $a$ et $b$.  
-Si le front arrive des deux directions, je résous l’équation quadratique issue 
+Si le front arrive des deux directions, je résous l'équation quadratique issue 
 de la discrétisation de l'équation d'Eikonal :  
 \[
 U_{new} = \frac{a + b + \sqrt{2 \tilde{P}^2 - (a - b)^2}}{2}.
@@ -213,5 +222,125 @@ deux points.
 
 
 \section{Résultats}
+
+\subsection{Image similaire à l'article}
+
+
+Dans cette partie, nous allons voir les résultats de l'implémentation de la méthode
+vue dans l'article.
+
+J'ai décidé, pour les tests, de commencer sur des images très proches de celles
+montrées dans l'article. Nous avons donc choisi des images de chemins vues du ciel,
+présentant un contraste fort entre le chemin et le reste de l'image.
+
+\begin{figure}[h!]
+    \centering
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_2/1.jpg}
+        \caption*{\small Image de base}
+    \end{minipage}\hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_2/2.png}
+        \caption*{\small Carte des $\tilde{P}$}
+    \end{minipage}\hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_2/3.png}
+        \caption*{\small Carte des distances}
+    \end{minipage}\hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_2/4.png}
+        \caption*{\small Image de base et chemin}
+    \end{minipage}
+    \label{fig:images-tests}
+\end{figure}
+
+La figure 1 est l'image utilisée dans cet exemple. Elle est similaire à l'image présentée 
+dans l'article.
+
+La figure 2 représente la carte de $\tilde{P}$. On peut voir que les bords des chemins 
+sont en bleu très sombre, ce qui signifie que le coût local est faible à ces endroits. 
+Le front se propage donc plus rapidement le long des contours. 
+On remarque aussi que l'intérieur des chemins est en rouge, ce qui indique un coût 
+plus élevé et donc une propagation plus lente dans ces zones homogènes.
+
+La figure 3 représente la carte des distances $U$. Comme nous pouvons le voir, plus 
+on s'éloigne du point de départ au centre de l'image, plus les couleurs deviennent 
+rouges, ce qui correspond à une distance cumulée plus grande. On observe également que 
+là où se trouvent les chemins, les distances sont plus faibles, car le coût local y 
+est minimal.
+
+La figure 4 représente le chemin trouvé à l'aide du backtracking. 
+Les résultats sur cette image sont très satisfaisants : le chemin suit bien le tracé 
+du chemin réel visible sur l'image et reste stable malgré les petites variations de contraste.
+
+
+
+\subsection{Image différente de l'article}
+
+
+Dans cette section nous allons voir les résultats de la méthode dans le cadre d'une
+image plus réaliste et avec un contraste moins marqué entre la route et le bord de 
+la route.
+
+
+\begin{figure}[h!]
+    \centering
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_4/1.png}
+        \caption*{\small Image de base}
+    \end{minipage}\hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_4/2.png}
+        \caption*{\small Carte des $\tilde{P}$}
+    \end{minipage}\hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_4/3.png}
+        \caption*{\small Carte des distances}
+    \end{minipage}\hfill
+    \begin{minipage}{0.24\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{result_image/Image_4/4.png}
+        \caption*{\small Image de base et chemin}
+    \end{minipage}
+    \label{fig:images-tests}
+\end{figure}
+
+Comme nous pouvons le voir, l'algorithme a du mal à distinguer la route du reste de la forêt. 
+La figure 6 montre la carte de $\tilde{P}$, où le contraste entre la route et l'environnement 
+est faible. La figure 7 présente la carte des distances $U$, qui reste donc assez uniforme 
+et ne met pas clairement en évidence le tracé du chemin.
+
+
+
+\section{Conclusion}
+
+Comme nous avons pu le voir, l'implémentation de la méthode offre des résultats
+satisfaisants sur les images ayant un fort contraste entre le chemin et le bord
+du chemin. Cependant, dès que l'image ne présente pas un fort contraste, la méthode
+devient inefficace.
+
+Les temps de calcul observés sont vraiment moins bons que ceux énoncés dans l'article.
+Cela est sûrement dû au fait que je n'utilise pas \texttt{heapq}, mais surtout au fait que Python
+n'est pas un langage aussi puissant que le C ou le C++, qui sont compilés et permettent 
+de faire des calculs sur plusieurs cœurs et threads. Cela est aussi sûrement dû 
+à mon inexpérience dans le domaine.
+
+Il existe plusieurs méthodes plus modernes qui pourraient remplacer cette méthode,
+comme par exemple un réseau de neurones de type \textit{CNN} pour la détection automatique des bords.
+Cette approche aurait sûrement de meilleurs résultats, mais surtout serait plus rapide grâce
+aux calculs effectués sur GPU.
+
+Pour conclure, ce travail était vraiment intéressant, tant sur le plan de la compréhension
+de l'article que sur celui de la programmation.
+
+
+
 
 \end{document}
